@@ -1,0 +1,49 @@
+[gd_scene load_steps=4 format=3 uid="uid://ciehlxuorv1bo"]
+
+[sub_resource type="GDScript" id="GDScript_m54gu"]
+script/source = "extends CharacterBody2D
+
+
+const SPEED = 300.0
+const BASE_HEALTH = 10
+var health = BASE_HEALTH
+
+
+func _physics_process(delta):
+	
+	
+	
+	move_and_slide()
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rtho6"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ucvd6"]
+
+[node name="Enemy" type="CharacterBody2D"]
+scale = Vector2(2, 2)
+script = SubResource("GDScript_m54gu")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_rtho6")
+debug_color = Color(0, 0, 0, 0.419608)
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+target_position = Vector2(100, 200)
+collision_mask = 15
+
+[node name="sensefield" type="Area2D" parent="."]
+scale = Vector2(10, 10)
+collision_layer = 2
+collision_mask = 15
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="sensefield"]
+shape = SubResource("CircleShape2D_ucvd6")
+debug_color = Color(0.686275, 0.498039, 0.105882, 0.419608)
+
+[node name="SearchTimeout" type="Timer" parent="."]
+wait_time = 4.0
+
+[connection signal="body_entered" from="sensefield" to="." method="_on_fieldofsense_body_entered"]
+[connection signal="body_exited" from="sensefield" to="." method="_on_fieldofsense_body_exited"]
+[connection signal="timeout" from="SearchTimeout" to="." method="_on_search_timeout_timeout"]
